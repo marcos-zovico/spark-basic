@@ -22,24 +22,24 @@ public class StringToDate implements Serializable {
     /**
      * Converte um data string para data
      */
-    public static final UDF3 STRING_TO_DATE = (UDF3<String, String, String, Date>) (dateIn, format, fieldName) -> {
+    public static final UDF3 STRING_TO_DATE = (UDF3<String, String, String, Date>) (value, format, fieldName) -> {
 
-        if (StringUtils.isBlank(dateIn)) {
+        if (StringUtils.isBlank(value)) {
             throw new DateParserException(String.format("A coluna de data '%s' contém valores vazios.", fieldName));
         }
 
         try {
-            DateTimeParser[] parsers = {
+            final DateTimeParser[] parsers = {
                     DateTimeFormat.forPattern(format + " HH:mm:ss").getParser(),
                     DateTimeFormat.forPattern(format + " HH:mm").getParser(),
                     DateTimeFormat.forPattern(format + " HH").getParser(),
                     DateTimeFormat.forPattern(format).getParser()};
 
-            DateTimeFormatter formatter = new DateTimeFormatterBuilder().append(null, parsers).toFormatter();
-            LocalDateTime dateTime = formatter.parseLocalDateTime(dateIn.trim());
+            final DateTimeFormatter formatter = new DateTimeFormatterBuilder().append(null, parsers).toFormatter();
+            final LocalDateTime dateTime = formatter.parseLocalDateTime(value.trim());
             return new Date(dateTime.toDate().getTime());
         } catch (Exception e) {
-            throw new DateParserException(String.format("Não foi possível mapear a coluna data '%s', com o valor '%s' utilizando o formato '%s'", fieldName, dateIn, format));
+            throw new DateParserException(String.format("Não foi possível mapear a coluna data '%s', com o valor '%s' utilizando o formato '%s'", fieldName, value, format));
         }
     };
 }

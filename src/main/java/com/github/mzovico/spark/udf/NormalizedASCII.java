@@ -25,7 +25,7 @@ public class NormalizedASCII implements Serializable {
             if (StringUtils.isBlank(value)) {
                 return "";
             } else {
-                String unescapedValue = StringEscapeUtils.unescapeCsv(value);
+                final String unescapedValue = StringEscapeUtils.unescapeCsv(value);
                 return Normalizer.normalize(unescapedValue, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
             }
         } catch (Exception e) {
